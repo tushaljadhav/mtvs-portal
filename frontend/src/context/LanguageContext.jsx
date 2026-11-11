@@ -2,27 +2,39 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const translations = {
   mr: {
-    // Brand
+    // Brand & Header
     brandName: 'मुंबई विडी तंबाखू संघ',
-    govtReg: 'शासकीय नोंदणीकृत',
+    brandNameMr: 'मुंबई विडी तंबाखू संघ',
+    brandSub: 'Mumbai Vidi Tambakhu Sangh',
+    govtReg: 'शासकीय नोंदणीकृत कामगार संघटना',
+    govtRegNotice: 'सदस्यांची अधिकृत संघटना • मुंबई, महाराष्ट्र (शा. नोंदणी २०२६)',
     tagline: 'मुंबईतील विडी कामगार व तंबाखू विक्रेत्यांची अधिकृत संघटना',
-    
+
     // Nav
     joinUnion: 'सभासद व्हा',
     trackStatus: 'अर्ज स्थिती',
     home: 'मुख्यपृष्ठ',
     terms: 'नियम व अटी',
 
+    // Common
+    back: 'मागे',
+    share: 'शेअर करा',
+    downloadPdf: 'पास PDF डाऊनलोड करा',
+    preparing: 'तयार करत आहे...',
+    close: 'बंद करा',
+    refresh: 'रिफ्रेश',
+    search: 'शोधा',
+
     // Landing Page
     heroTitle: 'मुंबई विडी तंबाखू संघात आपले सहर्ष स्वागत आहे',
     heroSubtitle: 'मुंबई परिसरातील सर्व विडी कामगार, पान दुकानदार, घाऊक व किरकोळ तंबाखू विक्रेत्यांचे हक्क व कायदेशीर संरक्षणासाठी कार्यरत अधिकृत संस्था.',
     heroCta: 'अधिकृत सभासद नोंदणी करा',
     trackCta: 'अर्जाची स्थिती तपासा',
-    
+
     // Landing Info Sections
     aboutTitle: 'संघाविषयी माहिती (About MTVS)',
     aboutDesc: 'मुंबई विडी तंबाखू संघ ही मुंबई महानगर व उपनगरातील हजारो विडी उत्पादक, कामगार, पानपट्टी चालक आणि तंबाखू व्यापारी यांचे प्रतिनिधित्व करणारी अग्रगण्य व अधिकृत कामगार संघटना आहे. सदस्यांच्या कल्याणासाठी, सरकारी परवाने व पोलीस सहकार्य, कायदेशीर मार्गदर्शन आणि सामाजिक सुरक्षेसाठी संघ निरंतर कार्यरत आहे.',
-    
+
     benefit1Title: 'कायदेशीर संरक्षण व मार्गदर्शन',
     benefit1Desc: 'स्थानिक प्रशासन, महापालिका व पोलीस यंत्रणेकडून होणाऱ्या त्रासाविरुद्ध अधिकृत संघाचे कायदेशीर साहाय्य.',
     benefit2Title: 'अधिकृत डिजिटल सभासद ओळखपत्र',
@@ -34,7 +46,7 @@ const translations = {
     regTitle: 'नवीन सभासद नोंदणी अर्ज',
     regSubtitle: 'सर्व माहिती अचूक भरा. अर्जाची क्षेत्रीय प्रतिनिधीद्वारे पडताळणी केली जाईल.',
     annualFeeNotice: 'वार्षिक सभासद शुल्क: ₹१०० (अर्जाची पडताळणी व मंजुरीनंतरच देय)',
-    
+
     secPersonal: '१. वैयक्तिक माहिती',
     fullName: 'पूर्ण नाव',
     fullNamePh: 'उदा. सुरेश रामचंद्र पाटील',
@@ -77,6 +89,14 @@ const translations = {
     trackSubtitle: 'आपला अर्ज क्रमांक (REQ-2026-XXXXX) किंवा नोंदणीकृत १० अंकी मोबाईल नंबर प्रविष्ट करा.',
     searchBtn: 'स्थिती तपासा',
     searching: 'तपासत आहे...',
+    appRef: 'अर्ज संदर्भ क्रमांक',
+    underVerification: 'पडताळणी अंतर्गत',
+    approvedWaitingPay: 'मंजूर — शुल्क भरणे बाकी',
+    verifiedActiveMember: 'प्रमाणित सक्रिय सभासद',
+    appRejected: 'अर्ज नाकारला',
+    step1: '१. अर्ज सादर',
+    step2: '२. मंजुरी',
+    step3: '३. सभासद पास',
     stepSubmitted: 'अर्ज सादर',
     stepApproved: 'मंजूर',
     stepPassed: 'पास जारी',
@@ -86,41 +106,89 @@ const translations = {
     approvedDesc: 'वार्षिक ₹१०० शुल्क भरण्यासाठी खालील क्युआर कोड स्कॅन करा.',
     paidHeading: 'अभिनंदन! सभासदत्व सक्रिय झाले आहे!',
     viewPassBtn: 'सभासद पास पहा व डाऊनलोड करा',
+    payUpiHeading: 'वार्षिक शुल्क ₹१०० युपीआय द्वारे भरा',
+    scanQrPay: 'कोणत्याही UPI App ने स्कॅन करा',
+    upiCopied: 'UPI ID कॉपी केली!',
+    copyUpi: 'UPI ID कॉपी करा',
+    upiNotice: 'पेमेंट केल्यानंतर २ तासांत तुमचा डिजिटल पास सक्रिय केला जाईल.',
 
-    // Pass
+    // Pass Page
+    loadingPass: 'अधिकृत सभासद पास लोड होत आहे...',
+    passNotFound: 'सभासद नोंद आढळली नाही',
+    invalidPassNotice: 'अवैध सभासद आयडी किंवा शुल्क प्रलंबित आहे.',
+    backToTrack: '← अर्ज स्थिती पृष्ठावर परत जा',
+    passNotice: 'हा प्रमाणित पास बृहन्मुंबई महानगरपालिकेच्या सर्व वॉर्डांमध्ये अधिकृतपणे वैध आहे.',
+    shareText: 'मुंबई विडी तंबाखू संघ – प्रमाणित सभासद पास',
+    passLinkCopied: 'पास लिंक क्लिपबोर्डवर कॉपी केली!',
+
+    // Pass Card Details
     passTitle: 'मुंबई विडी तंबाखू संघ',
     passSubtitle: 'अधिकृत सभासद ओळखपत्र',
-    verifiedPass: 'प्रमाणित पास',
-    issueDate: 'जारी तारीख',
-    validUntil: 'वैधता',
-    receiptNo: 'पावती क्र.',
-    feePaid: 'वार्षिक शुल्क: ₹१०० भरले',
-    downloadPdf: 'पास PDF डाऊनलोड करा',
-    partnerAds: 'संघाचे अधिकृत जाहिरातदार',
+    memberPassBadge: 'MEMBER PASS / सदस्य पास',
+    validBadge: 'VALID / वैध',
+    memberBadge: '✓ सदस्य / Member',
+    designationLabel: 'Member / सदस्य',
+    designationSub: '(सदस्य पद / Designation)',
+    areaSub: '(क्षेत्र / Ward)',
+    phoneSub: '(फोन नंबर)',
+    shopSub: 'दुकान / व्यवसाय',
+    memberSinceLabel: 'Member Since:',
+    joinDateSub: '(सदस्यत्व तारीख)',
+    validityHeader: '🛡️ Validity / वैधता',
+    fromLabel: 'From / पासून',
+    toLabel: 'To / पर्यंत',
+    activeBadge: '✓ Active / सक्रिय',
+    scanToVerify: 'Scan to Verify',
+    scanToVerifySub: 'स्कॅन करा',
+    joinedLabel: 'Joined / सामील:',
+    expiresLabel: 'Expires / समाप्त:',
+    annualSubLabel: 'Annual Union Subscription / वार्षिक वर्गणी',
+    feePaidLabel: '₹१०० / वर्ष Paid',
+    issuedBy: 'Issued by MTVS 2026-2027',
+    issuedBySub: 'स्कॅन करून पडताळणी',
+    receiptNoLabel: 'Receipt No. / पावती क्र.',
+    paidOnLabel: 'Paid On / तारीख',
+    payModeLabel: 'Mode / पद्धत',
+    upiRefLabel: 'UPI Reference / संदर्भ',
+    subPaidLabel: 'Subscription Paid',
+    adHeader: 'Advertisement / जाहिरात (Click to Connect)',
+    cardBottomNote: 'Official Member Pass issued by Mumbai Vidi Tambakhu Sangh. Keep this pass accessible at your workplace.',
   },
 
   hi: {
-    // Brand
+    // Brand & Header
     brandName: 'मुंबई बीड़ी तंबाकू संघ',
-    govtReg: 'शासन पंजीकृत',
+    brandNameMr: 'मुंबई बीड़ी तंबाकू संघ',
+    brandSub: 'Mumbai Vidi Tambakhu Sangh',
+    govtReg: 'शासन पंजीकृत कामगार संगठन',
+    govtRegNotice: 'सदस्यों का अधिकृत संगठन • मुंबई, महाराष्ट्र (शासन पंजी. २०२६)',
     tagline: 'मुंबई के बीड़ी कामगार व तंबाकू विक्रेताओं का अधिकृत संगठन',
-    
+
     // Nav
     joinUnion: 'सदस्य बनें',
     trackStatus: 'आवेदन स्थिति',
     home: 'मुख्य पृष्ठ',
     terms: 'नियम व शर्तें',
 
+    // Common
+    back: 'वापस',
+    share: 'साझा करें',
+    downloadPdf: 'पास PDF डाउनलोड करें',
+    preparing: 'तैयार हो रहा है...',
+    close: 'बंद करें',
+    refresh: 'ताज़ा करें',
+    search: 'खोजें',
+
     // Landing Page
     heroTitle: 'मुंबई बीड़ी तंबाकू संघ में आपका स्वागत है',
     heroSubtitle: 'मुंबई क्षेत्र के सभी बीड़ी कामगारों, पान दुकानदारों, थोक व खुदरा तंबाकू विक्रेताओं के अधिकारों और कानूनी संरक्षण हेतु कार्यरत अधिकृत संस्था।',
     heroCta: 'अधिकृत सदस्यता हेतु आवेदन करें',
     trackCta: 'आवेदन स्थिति जांचें',
-    
+
     // Landing Info Sections
     aboutTitle: 'संघ के बारे में (About MTVS)',
     aboutDesc: 'मुंबई बीड़ी तंबाकू संघ मुंबई और उपनगरों के हजारों बीड़ी निर्माताओं, श्रमिकों, पान दुकानदारों और व्यापारियों का प्रतिनिधित्व करने वाला अग्रणी संगठन है। यह संघ सदस्यों के कल्याण, कानूनी सलाह, और व्यापार सुरक्षा हेतु निरंतर कार्यरत है।',
-    
+
     benefit1Title: 'कानूनी संरक्षण व मार्गदर्शन',
     benefit1Desc: 'स्थानीय प्रशासन व अन्य समस्याओं में संगठन का अधिकृत कानूनी सहयोग।',
     benefit2Title: 'अधिकृत डिजिटल सदस्यता पहचान पत्र',
@@ -132,7 +200,7 @@ const translations = {
     regTitle: 'नई सदस्यता पंजीकरण फॉर्म',
     regSubtitle: 'सभी विवरण सही भरें। क्षेत्रीय प्रतिनिधि द्वारा आवेदन का सत्यापन किया जाएगा।',
     annualFeeNotice: 'वार्षिक सदस्यता शुल्क: ₹100 (सत्यापन और मंजूरी के बाद ही देय)',
-    
+
     secPersonal: '१. व्यक्तिगत विवरण',
     fullName: 'पूरा नाम',
     fullNamePh: 'उदा. सुरेश रामचंद्र पाटिल',
@@ -175,6 +243,14 @@ const translations = {
     trackSubtitle: 'अपना आवेदन संदर्भ (REQ-2026-XXXXX) या पंजीकृत 10 अंकों का मोबाइल नंबर दर्ज करें।',
     searchBtn: 'स्थिति जांचें',
     searching: 'जांच जारी है...',
+    appRef: 'आवेदन संदर्भ संख्या',
+    underVerification: 'सत्यापन प्रक्रिया में',
+    approvedWaitingPay: 'स्वीकृत — भुगतान शेष',
+    verifiedActiveMember: 'प्रमाणित सक्रिय सदस्य',
+    appRejected: 'आवेदन अस्वीकृत',
+    step1: '१. आवेदन प्रस्तुत',
+    step2: '२. स्वीकृति',
+    step3: '३. सदस्यता पास',
     stepSubmitted: 'आवेदन प्रस्तुत',
     stepApproved: 'स्वीकृत',
     stepPassed: 'पास जारी',
@@ -184,41 +260,89 @@ const translations = {
     approvedDesc: 'वार्षिक ₹100 शुल्क भुगतान हेतु नीचे दिया गया QR कोड स्कैन करें।',
     paidHeading: 'बधाई! आपकी सदस्यता सक्रिय हो गई है!',
     viewPassBtn: 'सदस्यता पास देखें और डाउनलोड करें',
+    payUpiHeading: 'वार्षिक शुल्क ₹100 यूपीआई द्वारा भुगतान करें',
+    scanQrPay: 'किसी भी UPI App से स्कैन करें',
+    upiCopied: 'UPI ID कॉपी हो गई!',
+    copyUpi: 'UPI ID कॉपी करें',
+    upiNotice: 'भुगतान के बाद 2 घंटे में आपका डिजिटल पास सक्रिय हो जाएगा।',
 
-    // Pass
+    // Pass Page
+    loadingPass: 'अधिकृत सदस्यता पास लोड हो रहा है...',
+    passNotFound: 'सदस्य रिकॉर्ड नहीं मिला',
+    invalidPassNotice: 'अमान्य सदस्य आईडी या शुल्क लंबित है।',
+    backToTrack: '← आवेदन स्थिति पृष्ठ पर वापस जाएं',
+    passNotice: 'यह प्रमाणित पास बृहन्मुंबई महानगरपालिका के सभी वार्डों में अधिकृत रूप से मान्य है।',
+    shareText: 'मुंबई बीड़ी तंबाकू संघ – प्रमाणित सदस्यता पास',
+    passLinkCopied: 'पास लिंक क्लिपबोर्ड पर कॉपी हो गया!',
+
+    // Pass Card Details
     passTitle: 'मुंबई बीड़ी तंबाकू संघ',
     passSubtitle: 'अधिकृत सदस्यता पहचान पत्र',
-    verifiedPass: 'प्रमाणित पास',
-    issueDate: 'जारी तिथि',
-    validUntil: 'वैधता',
-    receiptNo: 'रसीद संख्या',
-    feePaid: 'वार्षिक शुल्क: ₹100 भुगतान सम्पन्न',
-    downloadPdf: 'पास PDF डाउनलोड करें',
-    partnerAds: 'संघ के अधिकृत विज्ञापनदाता',
+    memberPassBadge: 'MEMBER PASS / सदस्य पास',
+    validBadge: 'VALID / वैध',
+    memberBadge: '✓ सदस्य / Member',
+    designationLabel: 'Member / सदस्य',
+    designationSub: '(सदस्य पद / Designation)',
+    areaSub: '(क्षेत्र / Ward)',
+    phoneSub: '(फ़ोन नंबर)',
+    shopSub: 'दुकान / व्यापार',
+    memberSinceLabel: 'Member Since:',
+    joinDateSub: '(सदस्यता तारीख)',
+    validityHeader: '🛡️ Validity / वैधता',
+    fromLabel: 'From / से',
+    toLabel: 'To / तक',
+    activeBadge: '✓ Active / सक्रिय',
+    scanToVerify: 'Scan to Verify',
+    scanToVerifySub: 'स्कैन करें',
+    joinedLabel: 'Joined / शामिल:',
+    expiresLabel: 'Expires / समाप्त:',
+    annualSubLabel: 'Annual Union Subscription / वार्षिक सदस्यता शुल्क',
+    feePaidLabel: '₹100 / वर्ष Paid',
+    issuedBy: 'Issued by MTVS 2026-2027',
+    issuedBySub: 'स्कैन करके सत्यापन',
+    receiptNoLabel: 'Receipt No. / रसीद क्र.',
+    paidOnLabel: 'Paid On / तारीख',
+    payModeLabel: 'Mode / माध्यम',
+    upiRefLabel: 'UPI Reference / संदर्भ',
+    subPaidLabel: 'Subscription Paid',
+    adHeader: 'Advertisement / विज्ञापन (Click to Connect)',
+    cardBottomNote: 'मुंबई बीड़ी तंबाकू संघ द्वारा जारी अधिकृत सदस्यता पहचान पत्र। कार्यस्थल पर साथ रखें।',
   },
 
   en: {
-    // Brand
+    // Brand & Header
     brandName: 'Mumbai Vidi Tambakhu Sangh',
+    brandNameMr: 'Mumbai Vidi Tambakhu Sangh',
+    brandSub: 'Govt. Registered Union',
     govtReg: 'Govt. Registered Union',
+    govtRegNotice: 'Union of Members • Mumbai, Maharashtra (Govt. Reg. 2026)',
     tagline: 'Official Union for Bidi Workers & Tobacco Retailers of Greater Mumbai',
-    
+
     // Nav
     joinUnion: 'Join Union',
     trackStatus: 'Track Status',
     home: 'Home',
     terms: 'Terms & Conditions',
 
+    // Common
+    back: 'Back',
+    share: 'Share',
+    downloadPdf: 'Download Pass PDF',
+    preparing: 'Preparing...',
+    close: 'Close',
+    refresh: 'Refresh',
+    search: 'Search',
+
     // Landing Page
     heroTitle: 'Welcome to Mumbai Vidi Tambakhu Sangh',
     heroSubtitle: 'The recognized welfare union dedicated to protecting the rights, livelihood, and legal interests of bidi rollers, pan shopkeepers, wholesale distributors, and tobacco vendors.',
     heroCta: 'Apply for Union Membership',
     trackCta: 'Track Application Status',
-    
+
     // Landing Info Sections
     aboutTitle: 'About MTVS',
     aboutDesc: 'Mumbai Vidi Tambakhu Sangh is the foremost representative union for thousands of bidi manufacturers, workers, retail pan shops, and tobacco merchants across Greater Mumbai. MTVS ensures fair treatment, legal advocacy against administrative harassment, licensing assistance, and family welfare support.',
-    
+
     benefit1Title: 'Legal Protection & Advocacy',
     benefit1Desc: 'Official union standing and immediate legal guidance against municipal harassment or arbitrary actions.',
     benefit2Title: 'Official Verified Digital Pass',
@@ -230,7 +354,7 @@ const translations = {
     regTitle: 'Union Membership Application',
     regSubtitle: 'Provide accurate details. Applications are reviewed by regional union representatives.',
     annualFeeNotice: 'Annual Membership Fee: ₹100 (Payable only after representative verification)',
-    
+
     secPersonal: '1. Personal Details',
     fullName: 'Full Name',
     fullNamePh: 'e.g. Suresh Ramchandra Patil',
@@ -273,6 +397,14 @@ const translations = {
     trackSubtitle: 'Enter your Application Reference (REQ-2026-XXXXX) or registered 10-digit mobile number.',
     searchBtn: 'Check Status',
     searching: 'Searching...',
+    appRef: 'Application Reference',
+    underVerification: 'Under Verification',
+    approvedWaitingPay: 'Approved — Waiting for Payment',
+    verifiedActiveMember: 'Verified Active Member',
+    appRejected: 'Application Rejected',
+    step1: '1. Submitted',
+    step2: '2. Approval',
+    step3: '3. Pass Issued',
     stepSubmitted: 'Submitted',
     stepApproved: 'Approved',
     stepPassed: 'Pass Issued',
@@ -282,17 +414,53 @@ const translations = {
     approvedDesc: 'Scan the QR code below using any UPI App to pay the annual ₹100 membership fee.',
     paidHeading: 'Congratulations! Membership is Active!',
     viewPassBtn: 'View & Download Member Pass',
+    payUpiHeading: 'Pay Annual Fee ₹100 via UPI',
+    scanQrPay: 'Scan with any UPI App',
+    upiCopied: 'UPI ID Copied!',
+    copyUpi: 'Copy UPI ID',
+    upiNotice: 'Your digital pass will be activated within 2 hours of payment confirmation.',
 
-    // Pass
+    // Pass Page
+    loadingPass: 'Loading Official Union Pass...',
+    passNotFound: 'Member Record Not Found',
+    invalidPassNotice: 'Invalid member ID or payment pending.',
+    backToTrack: '← Back to Status Tracker',
+    passNotice: 'This verified pass is valid across all municipal wards of Greater Mumbai.',
+    shareText: 'Mumbai Vidi Tambakhu Sangh – Verified Member Pass',
+    passLinkCopied: 'Pass link copied to clipboard!',
+
+    // Pass Card Details
     passTitle: 'Mumbai Vidi Tambakhu Sangh',
     passSubtitle: 'Official Member Identity Card',
-    verifiedPass: 'Verified Pass',
-    issueDate: 'Issue Date',
-    validUntil: 'Valid Until',
-    receiptNo: 'Receipt No',
-    feePaid: 'Annual Fee: ₹100 Paid',
-    downloadPdf: 'Download Pass PDF',
-    partnerAds: 'Official Union Advertisers',
+    memberPassBadge: 'MEMBER PASS',
+    validBadge: 'VALID',
+    memberBadge: '✓ Verified Member',
+    designationLabel: 'Member',
+    designationSub: '(Union Member)',
+    areaSub: '(Area / Ward)',
+    phoneSub: '(Mobile No.)',
+    shopSub: 'Shop / Business',
+    memberSinceLabel: 'Member Since:',
+    joinDateSub: '(Joined Date)',
+    validityHeader: '🛡️ Validity Period',
+    fromLabel: 'From',
+    toLabel: 'To',
+    activeBadge: '✓ Active',
+    scanToVerify: 'Scan to Verify',
+    scanToVerifySub: 'Official QR Code',
+    joinedLabel: 'Joined:',
+    expiresLabel: 'Expires:',
+    annualSubLabel: 'Annual Union Subscription',
+    feePaidLabel: '₹100 / Year Paid',
+    issuedBy: 'Issued by MTVS 2026-2027',
+    issuedBySub: 'Official QR Verification',
+    receiptNoLabel: 'Receipt No.',
+    paidOnLabel: 'Paid On',
+    payModeLabel: 'Mode',
+    upiRefLabel: 'UPI Reference',
+    subPaidLabel: 'Subscription Paid',
+    adHeader: 'Official Union Advertisements',
+    cardBottomNote: 'Official Member Pass issued by Mumbai Vidi Tambakhu Sangh. Keep this pass accessible at your workplace.',
   }
 };
 
@@ -309,7 +477,7 @@ export function LanguageProvider({ children }) {
   };
 
   const t = (key) => {
-    return translations[lang]?.[key] || translations['en']?.[key] || key;
+    return translations[lang]?.[key] || translations['mr']?.[key] || translations['en']?.[key] || key;
   };
 
   return (

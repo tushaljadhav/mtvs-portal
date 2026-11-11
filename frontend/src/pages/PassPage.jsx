@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchPassById, fetchActiveAds } from '../api';
 import { exportPassCardToPdf } from '../utils/pdfExport';
+import { useLanguage } from '../context/LanguageContext';
 import PassCard from '../components/PassCard';
 import {
   Download,
@@ -147,6 +148,7 @@ function AdSlider({ ads }) {
 export default function PassPage() {
   const { memberId } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   // Ref for the HIDDEN PDF card (always 700px, off-screen)
   const pdfCardRef = useRef(null);
@@ -172,7 +174,16 @@ export default function PassPage() {
       .finally(() => setLoading(false));
   }, [memberId]);
 
-  // ── PDF Download — targets a *hidden* PassCard at full 700px width ────────
+  // ── Robust Back Button: Works in new tabs, direct links, and route history ──
+  const handleBack = () => {
+    if (window.history.length > 1 && window.history.state && window.history.state.idx > 0) {
+      navigate(-1);
+    } else {
+      navigate('/track');
+    }
+  };
+
+  // ── PDF Download — targets an off-screen PassCard at full 700px width ─────
   const handleDownloadPDF = async () => {
     if (!pdfCardRef.current || !member) return;
     setDownloading(true);
@@ -189,12 +200,12 @@ export default function PassPage() {
   };
 
   const handleShare = () => {
-    const text = `Mumbai Vidi Tambakhu Sangh – Verified Member Pass\nName: ${member?.name}\nID: ${member?.member_id}\nArea: ${member?.area}\nVerify: ${window.location.href}`;
+    const text = `${t('shareText')}\n${t('fullName')}: ${member?.name}\nID: ${member?.member_id}\n${t('area')}: ${member?.area}\n${window.location.href}`;
     if (navigator.share) {
-      navigator.share({ title: 'Union Pass', text, url: window.location.href });
+      navigator.share({ title: t('shareText'), text, url: window.location.href });
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert('Pass link copied to clipboard!');
+      alert(t('passLinkCopied'));
     }
   };
 
@@ -202,7 +213,7 @@ export default function PassPage() {
     return (
       <div className="max-w-xl mx-auto py-24 text-center">
         <div className="w-12 h-12 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-        <p className="text-slate-600 font-semibold text-sm">Loading Official Union Pass...</p>
+        <p className="text-slate-600 font-semibold text-sm">{t('loadingPass')}</p>
       </div>
     );
   }
@@ -212,10 +223,10 @@ export default function PassPage() {
       <div className="max-w-md mx-auto py-20 text-center px-4">
         <div className="p-8 bg-white rounded-3xl shadow-lg border border-slate-200">
           <div className="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-3 text-xl">⚠️</div>
-          <h2 className="text-lg font-bold text-slate-800 mb-1">Member Record Not Found</h2>
-          <p className="text-xs text-slate-500 mb-6">{error || 'Invalid member ID or payment pending.'}</p>
-          <button onClick={() => navigate('/track')} className="px-5 py-2.5 bg-slate-800 text-white text-xs font-bold rounded-xl">
-            ← Back to Status Tracker
+          <h2 className="text-lg font-bold text-slate-800 mb-1">{t('passNotFound')}</h2>
+          <p className="text-xs text-slate-500 mb-6">{error || t('invalidPassNotice')}</p>
+          <button onClick={() => navigate('/track')} className="px-5 py-2.5 bg-slate-800 text-white text-xs font-bold rounded-xl cursor-pointer">
+            {t('backToTrack')}
           </button>
         </div>
       </div>
@@ -230,29 +241,30 @@ export default function PassPage() {
       {/* Top Controls */}
       <div className="w-full max-w-[700px] flex justify-between items-center mb-4 print:hidden">
         <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-sm"
+          onClick={handleBack}
+          className="flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-slate-900 bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-sm transition-colors cursor-pointer"
+          title={t('back')}
         >
-          <ArrowLeft className="w-4 h-4" />
-          Back
+          <ArrowLeft className="w-4 h-4 text-emerald-700" />
+          <span>{t('back')}</span>
         </button>
 
         <div className="flex items-center gap-2">
           <button
             onClick={handleShare}
-            className="px-3 py-2 bg-white border border-slate-300 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-50 flex items-center gap-1.5 shadow-sm"
+            className="px-3 py-2 bg-white border border-slate-300 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-50 flex items-center gap-1.5 shadow-sm transition-colors cursor-pointer"
           >
-            <Share2 className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Share</span>
+            <Share2 className="w-3.5 h-3.5 text-emerald-700" />
+            <span className="hidden sm:inline">{t('share')}</span>
           </button>
 
           <button
             onClick={handleDownloadPDF}
             disabled={downloading}
-            className="px-3 sm:px-5 py-2 bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-800 hover:to-teal-800 text-white text-xs font-extrabold rounded-xl flex items-center gap-1.5 shadow-md transition-all active:scale-95 disabled:opacity-60"
+            className="px-3 sm:px-5 py-2 bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-800 hover:to-teal-800 text-white text-xs font-extrabold rounded-xl flex items-center gap-1.5 shadow-md transition-all active:scale-95 disabled:opacity-60 cursor-pointer"
           >
             <Download className="w-3.5 h-3.5 text-amber-300" />
-            {downloading ? 'Preparing...' : 'Download PDF'}
+            <span>{downloading ? t('preparing') : t('downloadPdf')}</span>
           </button>
         </div>
       </div>
@@ -264,8 +276,8 @@ export default function PassPage() {
       <AdSlider ads={ads} />
 
       {/* Info Notice */}
-      <div className="w-full max-w-[700px] mt-5 p-3 rounded-2xl bg-amber-50/80 border border-amber-200 text-[11px] text-amber-900 text-center print:hidden">
-        This verified pass is valid across all municipal wards of Greater Mumbai.
+      <div className="w-full max-w-[700px] mt-5 p-3 rounded-2xl bg-amber-50/80 border border-amber-200 text-[11px] text-amber-900 text-center font-medium print:hidden">
+        {t('passNotice')}
       </div>
 
       {/* ── OFF-SCREEN PDF Card at full 700px width ── */}

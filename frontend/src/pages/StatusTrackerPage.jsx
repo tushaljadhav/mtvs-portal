@@ -122,7 +122,7 @@ export default function StatusTrackerPage() {
           <div className="p-6 border-b border-slate-100 flex flex-wrap justify-between items-center gap-4 bg-slate-50/70">
             <div>
               <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                Application Reference
+                {t('appRef')}
               </div>
               <div className="text-lg sm:text-xl font-black font-mono text-slate-800">
                 {request.ref}
@@ -132,22 +132,22 @@ export default function StatusTrackerPage() {
             <div>
               {request.status === 'pending' && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
-                  <Clock className="w-3.5 h-3.5" /> Under Verification
+                  <Clock className="w-3.5 h-3.5" /> {t('underVerification')}
                 </span>
               )}
               {request.status === 'approved' && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200">
-                  <CreditCard className="w-3.5 h-3.5" /> Approved — Waiting for Payment
+                  <CreditCard className="w-3.5 h-3.5" /> {t('approvedWaitingPay')}
                 </span>
               )}
               {request.status === 'paid' && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Verified Active Member
+                  <CheckCircle2 className="w-3.5 h-3.5" /> {t('verifiedActiveMember')}
                 </span>
               )}
               {request.status === 'rejected' && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200">
-                  <XCircle className="w-3.5 h-3.5" /> Application Rejected
+                  <XCircle className="w-3.5 h-3.5" /> {t('appRejected')}
                 </span>
               )}
             </div>
@@ -157,7 +157,7 @@ export default function StatusTrackerPage() {
             {/* Visual Progress Bar */}
             <div className="grid grid-cols-3 gap-2 text-center">
               <div className="border-b-2 border-emerald-600 pb-2">
-                <div className="text-[10px] text-emerald-700 font-extrabold uppercase">Step 1</div>
+                <div className="text-[10px] text-emerald-700 font-extrabold uppercase">{t('step1')}</div>
                 <div className="text-xs sm:text-sm font-bold text-slate-800">{t('stepSubmitted')}</div>
               </div>
               <div
@@ -167,7 +167,7 @@ export default function StatusTrackerPage() {
                     : 'border-slate-200 text-slate-400'
                 }`}
               >
-                <div className="text-[10px] uppercase font-bold">Step 2</div>
+                <div className="text-[10px] uppercase font-bold">{t('step2')}</div>
                 <div className="text-xs sm:text-sm font-semibold">{t('stepApproved')}</div>
               </div>
               <div
@@ -177,7 +177,7 @@ export default function StatusTrackerPage() {
                     : 'border-slate-200 text-slate-400'
                 }`}
               >
-                <div className="text-[10px] uppercase font-bold">Step 3</div>
+                <div className="text-[10px] uppercase font-bold">{t('step3')}</div>
                 <div className="text-xs sm:text-sm font-semibold">{t('stepPassed')}</div>
               </div>
             </div>
@@ -185,19 +185,19 @@ export default function StatusTrackerPage() {
             {/* Applicant Details Summary */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-100 text-xs sm:text-sm">
               <div>
-                <span className="text-slate-400 block text-xs">Applicant Name</span>
+                <span className="text-slate-400 block text-xs">{t('fullName')}</span>
                 <strong className="text-slate-800 text-sm sm:text-base">{request.name}</strong>
               </div>
               <div>
-                <span className="text-slate-400 block text-xs">Area / Ward</span>
+                <span className="text-slate-400 block text-xs">{t('area')}</span>
                 <span className="text-slate-700 font-semibold">{request.area}</span>
               </div>
               <div>
-                <span className="text-slate-400 block text-xs">Shop / Trade</span>
+                <span className="text-slate-400 block text-xs">{t('shopName')}</span>
                 <span className="text-slate-700">{request.shop} ({request.work_type})</span>
               </div>
               <div>
-                <span className="text-slate-400 block text-xs">Mobile Number</span>
+                <span className="text-slate-400 block text-xs">{t('mobile')}</span>
                 <span className="text-slate-700 font-mono">+91 {request.phone}</span>
               </div>
             </div>

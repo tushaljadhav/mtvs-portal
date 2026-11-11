@@ -1,5 +1,6 @@
 import React from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
+import { useLanguage } from '../context/LanguageContext';
 import { 
   ShieldCheck, 
   MapPin, 
@@ -13,6 +14,8 @@ import {
 } from 'lucide-react';
 
 export default function PassCard({ member, ads = [] }) {
+  const { lang, t } = useLanguage();
+
   if (!member) return null;
 
   const joinedDate = new Date(member.paid_at || member.submitted_at || Date.now());
@@ -20,7 +23,11 @@ export default function PassCard({ member, ads = [] }) {
   expiryDate.setFullYear(expiryDate.getFullYear() + 1);
 
   const formatDate = (d) =>
-    d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    d.toLocaleDateString(lang === 'en' ? 'en-IN' : lang === 'hi' ? 'hi-IN' : 'mr-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
 
   // Exactly 2 featured ads for the pass card
   const passAds = ads.slice(0, 2);
@@ -70,22 +77,22 @@ export default function PassCard({ member, ads = [] }) {
 
         <div style={{ textAlign: 'center', flex: 1, padding: '0 12px' }}>
           <div style={{ fontSize: '18px', fontWeight: 900, letterSpacing: '0.4px', textShadow: '0 1px 3px rgba(0,0,0,0.2)' }}>
-            Mumbai Vidi Tambakhu Sangh
+            {lang === 'en' ? 'Mumbai Vidi Tambakhu Sangh' : lang === 'hi' ? 'मुंबई बीड़ी तंबाकू संघ' : 'मुंबई विडी तंबाखू संघ'}
           </div>
           <div style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.92)', marginTop: '2px' }}>
-            मुंबई विडी तंबाखू संघ
+            {lang === 'en' ? 'Union of Bidi Workers & Tobacco Merchants' : 'Mumbai Vidi Tambakhu Sangh'}
           </div>
           <div style={{ fontSize: '10.5px', color: 'rgba(255,255,255,0.75)', marginTop: '3px' }}>
-            Union of Members • Mumbai, Maharashtra (Govt. Reg. 2026)
+            {t('govtRegNotice')}
           </div>
         </div>
 
         <div style={{ textAlign: 'right' }}>
           <div style={{ fontSize: '13px', fontWeight: 900, letterSpacing: '0.5px', color: '#ffffff' }}>
-            MEMBER PASS
+            {t('memberPassBadge')}
           </div>
           <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.85)', fontWeight: 600 }}>
-            सदस्य पास
+            {lang === 'en' ? 'Official Member Pass' : 'अधिकृत सदस्य पास'}
           </div>
           <div style={{ marginTop: '6px' }}>
             <span
@@ -103,7 +110,7 @@ export default function PassCard({ member, ads = [] }) {
               }}
             >
               <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#4ade80', display: 'inline-block' }}></span>
-              VALID / वैध
+              {t('validBadge')}
             </span>
           </div>
         </div>
@@ -180,7 +187,7 @@ export default function PassCard({ member, ads = [] }) {
               fontWeight: 700
             }}
           >
-            ✓ सदस्य / Member
+            {t('memberBadge')}
           </span>
         </div>
 
@@ -195,8 +202,8 @@ export default function PassCard({ member, ads = [] }) {
               <UserCheck style={{ width: '14px', height: '14px', margin: 'auto' }} />
             </div>
             <div>
-              <span style={{ fontWeight: 700 }}>Member / सदस्य</span>
-              <span style={{ fontSize: '11.5px', color: '#64748b', marginLeft: '6px' }}>(सदस्य पद / Designation)</span>
+              <span style={{ fontWeight: 700 }}>{t('designationLabel')}</span>
+              <span style={{ fontSize: '11.5px', color: '#64748b', marginLeft: '6px' }}>{t('designationSub')}</span>
             </div>
           </div>
 
@@ -206,7 +213,7 @@ export default function PassCard({ member, ads = [] }) {
             </div>
             <div>
               <span style={{ fontWeight: 700 }}>{member.area}, Mumbai</span>
-              <span style={{ fontSize: '11.5px', color: '#64748b', marginLeft: '6px' }}>(क्षेत्र / Ward)</span>
+              <span style={{ fontSize: '11.5px', color: '#64748b', marginLeft: '6px' }}>{t('areaSub')}</span>
             </div>
           </div>
 
@@ -216,7 +223,7 @@ export default function PassCard({ member, ads = [] }) {
             </div>
             <div>
               <span style={{ fontWeight: 700, fontFamily: 'monospace' }}>+91 {member.phone}</span>
-              <span style={{ fontSize: '11.5px', color: '#64748b', marginLeft: '6px' }}>(फोन नंबर)</span>
+              <span style={{ fontSize: '11.5px', color: '#64748b', marginLeft: '6px' }}>{t('phoneSub')}</span>
             </div>
           </div>
 
@@ -227,7 +234,7 @@ export default function PassCard({ member, ads = [] }) {
               </div>
               <div>
                 <span style={{ fontWeight: 700 }}>{member.shop}</span>
-                <span style={{ fontSize: '11.5px', color: '#64748b', marginLeft: '6px' }}>({member.work_type || 'दुकान / व्यवसाय'})</span>
+                <span style={{ fontSize: '11.5px', color: '#64748b', marginLeft: '6px' }}>({member.work_type || t('shopSub')})</span>
               </div>
             </div>
           )}
@@ -237,8 +244,8 @@ export default function PassCard({ member, ads = [] }) {
               <Calendar style={{ width: '14px', height: '14px', margin: 'auto' }} />
             </div>
             <div>
-              <span>Member Since: <strong style={{ color: '#0f172a' }}>{formatDate(joinedDate)}</strong></span>
-              <span style={{ fontSize: '11.5px', color: '#64748b', marginLeft: '6px' }}>(सदस्यत्व तारीख)</span>
+              <span>{t('memberSinceLabel')} <strong style={{ color: '#0f172a' }}>{formatDate(joinedDate)}</strong></span>
+              <span style={{ fontSize: '11.5px', color: '#64748b', marginLeft: '6px' }}>{t('joinDateSub')}</span>
             </div>
           </div>
 
@@ -252,21 +259,21 @@ export default function PassCard({ member, ads = [] }) {
             }}
           >
             <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#166534', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '5px' }}>
-              🛡️ Validity / वैधता
+              {t('validityHeader')}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>
               <div>
-                <div style={{ fontSize: '10px', color: '#166534', fontWeight: 500 }}>From / पासून</div>
+                <div style={{ fontSize: '10px', color: '#166534', fontWeight: 500 }}>{t('fromLabel')}</div>
                 <div>{formatDate(joinedDate)}</div>
               </div>
               <div style={{ color: '#16a34a', margin: '0 4px' }}>→</div>
               <div>
-                <div style={{ fontSize: '10px', color: '#166534', fontWeight: 500 }}>To / पर्यंत</div>
+                <div style={{ fontSize: '10px', color: '#166534', fontWeight: 500 }}>{t('toLabel')}</div>
                 <div>{formatDate(expiryDate)}</div>
               </div>
               <div style={{ marginLeft: 'auto' }}>
                 <span style={{ background: '#166534', color: '#ffffff', padding: '3px 9px', borderRadius: '8px', fontSize: '11px', fontWeight: 800 }}>
-                  ✓ Active / सक्रिय
+                  {t('activeBadge')}
                 </span>
               </div>
             </div>
@@ -290,14 +297,14 @@ export default function PassCard({ member, ads = [] }) {
         <div style={{ background: '#ffffff', padding: '8px', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px', flexShrink: 0 }}>
           <QRCodeCanvas value={verifyUrl} size={74} level="M" />
           <div style={{ fontSize: '8.5px', color: '#64748b', fontWeight: 700, textAlign: 'center', textTransform: 'uppercase' }}>
-            Scan to Verify<br />स्कॅन करा
+            {t('scanToVerify')}<br />{t('scanToVerifySub')}
           </div>
         </div>
 
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'rgba(255,255,255,0.85)', marginBottom: '5px', fontWeight: 600 }}>
-            <span>Joined / सामील: {formatDate(joinedDate)}</span>
-            <span>Expires / समाप्त: {formatDate(expiryDate)}</span>
+            <span>{t('joinedLabel')} {formatDate(joinedDate)}</span>
+            <span>{t('expiresLabel')} {formatDate(expiryDate)}</span>
           </div>
 
           <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: '20px', height: '8px', overflow: 'hidden' }}>
@@ -305,18 +312,18 @@ export default function PassCard({ member, ads = [] }) {
           </div>
 
           <div style={{ marginTop: '10px', textAlign: 'center' }}>
-            <div style={{ fontSize: '10.5px', color: 'rgba(255,255,255,0.7)' }}>Annual Union Subscription / वार्षिक वर्गणी</div>
+            <div style={{ fontSize: '10.5px', color: 'rgba(255,255,255,0.7)' }}>{t('annualSubLabel')}</div>
             <div style={{ fontSize: '14px', color: '#FFD700', fontWeight: 900, marginTop: '1px' }}>
-              ₹100 / वर्ष Paid
+              {t('feePaidLabel')}
             </div>
           </div>
         </div>
 
         <div style={{ textAlign: 'right', color: 'rgba(255,255,255,0.9)', flexShrink: 0 }}>
           <div style={{ fontSize: '20px', color: '#FFD700', marginBottom: '2px' }}>📱</div>
-          <div style={{ fontSize: '12px', fontWeight: 800 }}>Scan to Verify</div>
-          <div style={{ fontSize: '10px', opacity: 0.8 }}>स्कॅन करून पडताळणी</div>
-          <div style={{ fontSize: '9.5px', color: 'rgba(255,255,255,0.6)', marginTop: '3px' }}>Issued by MTVS<br />2026-2027</div>
+          <div style={{ fontSize: '12px', fontWeight: 800 }}>{t('scanToVerify')}</div>
+          <div style={{ fontSize: '10px', opacity: 0.8 }}>{t('issuedBySub')}</div>
+          <div style={{ fontSize: '9.5px', color: 'rgba(255,255,255,0.6)', marginTop: '3px' }}>{t('issuedBy')}</div>
         </div>
       </div>
 
@@ -334,29 +341,29 @@ export default function PassCard({ member, ads = [] }) {
         }}
       >
         <div>
-          <span style={{ display: 'block', fontSize: '10px', color: '#64748b' }}>Receipt No. / पावती क्र.</span>
+          <span style={{ display: 'block', fontSize: '10px', color: '#64748b' }}>{t('receiptNoLabel')}</span>
           <span style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#0f172a', fontFamily: 'monospace' }}>
             {member.receipt_no || 'RCT-2026-001'}
           </span>
         </div>
         <div>
-          <span style={{ display: 'block', fontSize: '10px', color: '#64748b' }}>Paid On / तारीख</span>
+          <span style={{ display: 'block', fontSize: '10px', color: '#64748b' }}>{t('paidOnLabel')}</span>
           <span style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#0f172a' }}>
             {formatDate(joinedDate)}
           </span>
         </div>
         <div>
-          <span style={{ display: 'block', fontSize: '10px', color: '#64748b' }}>Mode / पद्धत</span>
+          <span style={{ display: 'block', fontSize: '10px', color: '#64748b' }}>{t('payModeLabel')}</span>
           <span style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#0f172a' }}>UPI</span>
         </div>
         <div>
-          <span style={{ display: 'block', fontSize: '10px', color: '#64748b' }}>UPI Reference / संदर्भ</span>
+          <span style={{ display: 'block', fontSize: '10px', color: '#64748b' }}>{t('upiRefLabel')}</span>
           <span style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: '#0f172a', fontFamily: 'monospace' }}>
             {member.txn_ref || '440291144468'}
           </span>
         </div>
         <div style={{ textAlign: 'right' }}>
-          <span style={{ display: 'block', fontSize: '10px', color: '#64748b' }}>Subscription Paid</span>
+          <span style={{ display: 'block', fontSize: '10px', color: '#64748b' }}>{t('subPaidLabel')}</span>
           <span style={{ display: 'block', fontSize: '20px', fontWeight: 900, color: '#1B4332', lineHeight: 1 }}>
             ₹100
           </span>
@@ -367,7 +374,7 @@ export default function PassCard({ member, ads = [] }) {
       {passAds.length > 0 && (
         <div style={{ padding: '12px 28px 16px', background: '#ffffff', borderTop: '1px solid #f1f5f9' }}>
           <div style={{ fontSize: '10px', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px' }}>
-            Advertisement / जाहिरात (Click to Connect)
+            {t('adHeader')}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: passAds.length > 1 ? '1fr 1fr' : '1fr', gap: '12px' }}>
             {passAds.map(ad => (
@@ -395,7 +402,7 @@ export default function PassCard({ member, ads = [] }) {
                   />
                 ) : (
                   <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #fff0e6, #ffd0b0)', color: '#FF6B35', fontWeight: 800, fontSize: '13px' }}>
-                    📢 {ad.title} (Call: {ad.phone})
+                    📢 {lang === 'mr' && ad.description_mr ? ad.description_mr : ad.title} (Call: {ad.phone})
                   </div>
                 )}
               </div>
@@ -406,7 +413,7 @@ export default function PassCard({ member, ads = [] }) {
 
       {/* Card Bottom Note */}
       <div style={{ padding: '8px 28px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', fontSize: '9.5px', color: '#94a3b8', textAlign: 'center' }}>
-        Official Member Pass issued by Mumbai Vidi Tambakhu Sangh. Keep this pass accessible at your workplace.
+        {t('cardBottomNote')}
       </div>
 
     </div>

@@ -1,0 +1,22 @@
+{
+  "name": "mtvs-project",
+  "version": "1.0.0",
+  "description": "Mumbai Vidi Tambakhu Sangh (MTVS) - Official Member Portal",
+  "main": "backend/server.js",
+  "scripts": {
+    "postinstall": "npm --prefix backend install && npm --prefix frontend install",
+    "build": "npm --prefix frontend run build",
+    "start": "node backend/server.js",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "setup:db": "node backend/setup_db.js"
+  },
+  "keywords": [
+    "mtvs",
+    "mumbai-vidi-tambakhu-sangh",
+    "portal"
+  ],
+  "author": "",
+  "license": "ISC"
+}
+

@@ -21,7 +21,8 @@ async function initDb() {
     const database = process.env.DB_NAME || 'mtvs';
 
     console.log(`Connecting to MySQL on ${host}:${port} as user '${user}'...`);
-    conn = await mysql.createConnection({ host, port, user, password });
+    const ssl = process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined;
+    conn = await mysql.createConnection({ host, port, user, password, ssl });
 
     console.log('Connected! Ensuring database exists...');
     await conn.query(`CREATE DATABASE IF NOT EXISTS \`${database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`);

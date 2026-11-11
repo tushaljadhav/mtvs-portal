@@ -45,6 +45,9 @@ router.get('/areas', async (_req, res) => {
 /* ── Admin: Create Region ────────────────────────────────────────── */
 router.post('/regions', requireAuth, async (req, res) => {
   try {
+    if (req.admin.region) {
+      return res.status(403).json({ error: 'Forbidden: Only Super Admin can modify master regions' });
+    }
     const { name, name_mr, approver, phone } = req.body;
     if (!name || !approver || !phone) {
       return res.status(400).json({ error: 'Name, Approver, and Phone are required' });
@@ -63,6 +66,9 @@ router.post('/regions', requireAuth, async (req, res) => {
 /* ── Admin: Update Region ────────────────────────────────────────── */
 router.put('/regions/:id', requireAuth, async (req, res) => {
   try {
+    if (req.admin.region) {
+      return res.status(403).json({ error: 'Forbidden: Only Super Admin can modify master regions' });
+    }
     const { name, name_mr, approver, phone } = req.body;
     if (!name || !approver || !phone) {
       return res.status(400).json({ error: 'Name, Approver, and Phone are required' });
@@ -85,6 +91,9 @@ router.put('/regions/:id', requireAuth, async (req, res) => {
 /* ── Admin: Delete Region ────────────────────────────────────────── */
 router.delete('/regions/:id', requireAuth, async (req, res) => {
   try {
+    if (req.admin.region) {
+      return res.status(403).json({ error: 'Forbidden: Only Super Admin can delete master regions' });
+    }
     const [assigned] = await db.query('SELECT COUNT(*) AS cnt FROM areas WHERE region_id = ?', [req.params.id]);
     if (assigned[0]?.cnt > 0) {
       return res.status(400).json({
@@ -106,6 +115,9 @@ router.delete('/regions/:id', requireAuth, async (req, res) => {
 /* ── Admin: Create Area ──────────────────────────────────────────── */
 router.post('/areas', requireAuth, async (req, res) => {
   try {
+    if (req.admin.region) {
+      return res.status(403).json({ error: 'Forbidden: Only Super Admin can modify master areas' });
+    }
     const { region_id, name, lat, lng } = req.body;
     if (!region_id || !name) {
       return res.status(400).json({ error: 'Region and Area Name are required' });
@@ -129,6 +141,9 @@ router.post('/areas', requireAuth, async (req, res) => {
 /* ── Admin: Update Area ──────────────────────────────────────────── */
 router.put('/areas/:id', requireAuth, async (req, res) => {
   try {
+    if (req.admin.region) {
+      return res.status(403).json({ error: 'Forbidden: Only Super Admin can modify master areas' });
+    }
     const { region_id, name, lat, lng } = req.body;
     if (!region_id || !name) {
       return res.status(400).json({ error: 'Region and Area Name are required' });
@@ -153,6 +168,9 @@ router.put('/areas/:id', requireAuth, async (req, res) => {
 /* ── Admin: Delete Area ──────────────────────────────────────────── */
 router.delete('/areas/:id', requireAuth, async (req, res) => {
   try {
+    if (req.admin.region) {
+      return res.status(403).json({ error: 'Forbidden: Only Super Admin can delete master areas' });
+    }
     await db.query('DELETE FROM areas WHERE id = ?', [req.params.id]);
     res.json({ message: 'Area deleted' });
   } catch (err) {

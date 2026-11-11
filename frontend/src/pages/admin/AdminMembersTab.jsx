@@ -83,6 +83,7 @@ export default function AdminMembersTab() {
     requestAnimationFrame(() => {
       setTimeout(async () => {
         try {
+          if (!hiddenCardRef.current) throw new Error('Pass element not ready');
           await exportPassCardToPdf(hiddenCardRef.current, memberToDownload.member_id || memberToDownload.ref);
           showToast(`Pass PDF downloaded for ${memberToDownload.name}`);
         } catch (err) {
@@ -92,7 +93,7 @@ export default function AdminMembersTab() {
           setDownloadingId(null);
           setActivePassMember(null);
         }
-      }, 150);
+      }, 350);
     });
   };
 
@@ -148,7 +149,7 @@ export default function AdminMembersTab() {
 
       {/* ── OFF-SCREEN PASS CARD RENDERER FOR INSTANT DIRECT PDF DOWNLOAD ── */}
       {activePassMember && (
-        <div style={{ position: 'fixed', top: 0, left: '-10000px', width: '700px', zIndex: -100, pointerEvents: 'none' }} aria-hidden="true">
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '700px', zIndex: -9999, opacity: 0, pointerEvents: 'none' }} aria-hidden="true">
           <div ref={hiddenCardRef}>
             <PassCard member={activePassMember} ads={ads.slice(0, 2)} />
           </div>

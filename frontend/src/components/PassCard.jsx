@@ -128,6 +128,7 @@ export default function PassCard({ member, ads = [] }) {
               <img
                 src={member.photo_url}
                 alt={member.name}
+                crossOrigin="anonymous"
                 style={{ width: '96px', height: '96px', borderRadius: '14px', objectFit: 'cover', display: 'block' }}
               />
             ) : (
@@ -389,6 +390,7 @@ export default function PassCard({ member, ads = [] }) {
                   <img
                     src={ad.image_url}
                     alt={ad.title || 'Advertisement'}
+                    crossOrigin="anonymous"
                     style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                   />
                 ) : (

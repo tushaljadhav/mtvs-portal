@@ -180,7 +180,9 @@ export default function PassPage() {
       await exportPassCardToPdf(pdfCardRef.current, member.member_id || member.ref);
     } catch (err) {
       console.error('PDF error:', err);
-      alert('PDF download failed. Try again or use browser print (Ctrl+P).');
+      if (confirm('Direct PDF download encountered an issue. Would you like to print/save as PDF via browser print?')) {
+        window.print();
+      }
     } finally {
       setDownloading(false);
     }
@@ -266,16 +268,17 @@ export default function PassPage() {
         This verified pass is valid across all municipal wards of Greater Mumbai.
       </div>
 
-      {/* ── OFF-SCREEN PDF Card at full 700px width (must remain visible to html2canvas) ── */}
+      {/* ── OFF-SCREEN PDF Card at full 700px width ── */}
       <div
         ref={pdfCardRef}
         style={{
           position: 'fixed',
           top: 0,
-          left: '-10000px',
+          left: 0,
           width: '700px',
           pointerEvents: 'none',
-          zIndex: -1,
+          zIndex: -9999,
+          opacity: 0,
         }}
         aria-hidden="true"
       >

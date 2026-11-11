@@ -1,7 +1,7 @@
 // api.js – Centralized MTVS API Client
 const API_BASE =
   import.meta.env.VITE_API_URL ||
-  (typeof window !== 'undefined' && window.location.port === '5173'
+  (typeof window !== 'undefined' && ['5173', '5174', '5175', '3000'].includes(window.location.port)
     ? 'http://localhost:4000/api'
     : '/api');
 
@@ -145,10 +145,10 @@ export async function fetchAdminRequests(filters = {}) {
   return request(`/requests?${params.toString()}`);
 }
 
-export async function decideRequest(ref, action, reasonKey = null) {
+export async function decideRequest(ref, action, reasonKey = null, txnRef = null) {
   return request(`/requests/${encodeURIComponent(ref)}/decide`, {
     method: 'PATCH',
-    body: JSON.stringify({ action, reasonKey }),
+    body: JSON.stringify({ action, reasonKey, txnRef }),
   });
 }
 

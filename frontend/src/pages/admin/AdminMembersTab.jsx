@@ -74,27 +74,27 @@ export default function AdminMembersTab() {
   });
 
   // Direct PDF Download without redirecting (as requested by user)
-  const handleDirectDownloadPass = (memberToDownload) => {
+  const handleDirectDownloadPass = async (memberToDownload) => {
     if (!memberToDownload || downloadingId) return;
     setDownloadingId(memberToDownload.member_id);
     setActivePassMember(memberToDownload);
 
-    // Wait a tick for hidden PassCard to mount in DOM, then export after images load
-    requestAnimationFrame(() => {
-      setTimeout(async () => {
-        try {
-          if (!hiddenCardRef.current) throw new Error('Pass element not ready');
-          await exportPassCardToPdf(hiddenCardRef.current, memberToDownload.member_id || memberToDownload.ref);
-          showToast(`Pass PDF downloaded for ${memberToDownload.name}`);
-        } catch (err) {
-          console.error('PDF error:', err);
-          showToast('Could not generate PDF. Please try again.', 'error');
-        } finally {
-          setDownloadingId(null);
-          setActivePassMember(null);
-        }
-      }, 350);
-    });
+    try {
+      // Give React a tick to mount the hidden PassCard
+      await new Promise((r) => setTimeout(r, 250));
+      if (!hiddenCardRef.current) throw new Error('Pass element not ready');
+
+      await exportPassCardToPdf(hiddenCardRef.current, memberToDownload.member_id || memberToDownload.ref);
+      showToast(`Pass PDF downloaded for ${memberToDownload.name}`);
+    } catch (err) {
+      console.error('PDF error:', err);
+      // Fail-safe: open pass page so admin can immediately view and download/print
+      showToast('Opening pass page to view & save...', 'info');
+      window.open(`/pass/${encodeURIComponent(memberToDownload.member_id || memberToDownload.ref)}`, '_blank');
+    } finally {
+      setDownloadingId(null);
+      setActivePassMember(null);
+    }
   };
 
   // Export CSV
@@ -149,8 +149,20 @@ export default function AdminMembersTab() {
 
       {/* ── OFF-SCREEN PASS CARD RENDERER FOR INSTANT DIRECT PDF DOWNLOAD ── */}
       {activePassMember && (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '700px', zIndex: -9999, opacity: 0, pointerEvents: 'none' }} aria-hidden="true">
-          <div ref={hiddenCardRef}>
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '700px',
+            zIndex: -9999,
+            pointerEvents: 'none',
+            visibility: 'visible',
+            opacity: 1
+          }}
+          aria-hidden="true"
+        >
+          <div ref={hiddenCardRef} style={{ width: '700px', backgroundColor: '#ffffff' }}>
             <PassCard member={activePassMember} ads={ads.slice(0, 2)} />
           </div>
         </div>

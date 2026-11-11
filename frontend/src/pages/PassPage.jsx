@@ -278,11 +278,14 @@ export default function PassPage() {
           width: '700px',
           pointerEvents: 'none',
           zIndex: -9999,
-          opacity: 0,
+          visibility: 'visible',
+          opacity: 1,
         }}
         aria-hidden="true"
       >
-        <PassCard member={member} ads={pdfAds} />
+        <div style={{ width: '700px', backgroundColor: '#ffffff' }}>
+          <PassCard member={member} ads={pdfAds} />
+        </div>
       </div>
 
     </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { QRCodeSVG } from 'qrcode.react';
+import { QRCodeCanvas } from 'qrcode.react';
 import { 
   ShieldCheck, 
   MapPin, 
@@ -288,7 +288,7 @@ export default function PassCard({ member, ads = [] }) {
         }}
       >
         <div style={{ background: '#ffffff', padding: '8px', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px', flexShrink: 0 }}>
-          <QRCodeSVG value={verifyUrl} size={74} />
+          <QRCodeCanvas value={verifyUrl} size={74} level="M" />
           <div style={{ fontSize: '8.5px', color: '#64748b', fontWeight: 700, textAlign: 'center', textTransform: 'uppercase' }}>
             Scan to Verify<br />स्कॅन करा
           </div>

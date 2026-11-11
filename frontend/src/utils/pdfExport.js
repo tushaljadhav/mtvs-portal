@@ -1,7 +1,8 @@
-import html2pdf from 'html2pdf.js';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 /**
- * Convert any <img> tags inside the root element to base64 Data URLs.
+ * Preload and inline any <img> tags inside the root element to base64 Data URLs.
  * This completely prevents browser canvas tainting (CORS SecurityError)
  * when exporting cross-origin images (e.g. from Cloudinary) to PDF.
  */
@@ -10,15 +11,17 @@ async function inlineImages(rootEl) {
   const imgs = Array.from(rootEl.querySelectorAll('img'));
   await Promise.all(
     imgs.map(async (img) => {
-      if (!img.src || img.src.startsWith('data:')) return;
+      const src = img.getAttribute('src');
+      if (!src || src.startsWith('data:')) return;
       try {
-        const res = await fetch(img.src, { mode: 'cors' });
+        const res = await fetch(src, { mode: 'cors' });
         if (!res.ok) return;
         const blob = await res.blob();
+        if (!blob.type || !blob.type.startsWith('image/')) return;
         await new Promise((resolve) => {
           const reader = new FileReader();
           reader.onloadend = () => {
-            if (reader.result) {
+            if (reader.result && typeof reader.result === 'string' && reader.result.startsWith('data:image/')) {
               img.src = reader.result;
             }
             resolve();
@@ -26,8 +29,8 @@ async function inlineImages(rootEl) {
           reader.onerror = resolve;
           reader.readAsDataURL(blob);
         });
-      } catch {
-        // Fall back gracefully if image fetch is blocked
+      } catch (err) {
+        // Fall back gracefully if image fetch is blocked by CORS
       }
     })
   );
@@ -35,42 +38,60 @@ async function inlineImages(rootEl) {
 
 /**
  * Generates and downloads a clean A5 PDF containing ONLY the pass card.
+ * Uses html2canvas + jsPDF directly for maximum speed and rock-solid reliability.
  */
 export async function exportPassCardToPdf(containerEl, memberId = 'member') {
   if (!containerEl) throw new Error('Pass element not ready');
 
   const element = containerEl.querySelector('.pass-card-root') || containerEl;
 
-  // 1. Inline any cross-origin images to data URLs to avoid canvas tainting
-  await inlineImages(element);
+  // 1. Convert cross-origin images to base64 data URLs to prevent canvas tainting
+  try {
+    await inlineImages(element);
+  } catch (e) {
+    console.warn('Image inlining skipped:', e);
+  }
 
-  // 2. Wait a tick for SVG/layout to settle
-  await new Promise((r) => setTimeout(r, 200));
+  // 2. Allow layout and fonts to settle
+  await new Promise((r) => setTimeout(r, 150));
+
+  // 3. Render DOM element directly to HTML5 canvas at high resolution (scale 2)
+  const canvas = await html2canvas(element, {
+    scale: 2,
+    useCORS: true,
+    allowTaint: false,
+    backgroundColor: '#ffffff',
+    logging: false,
+    imageTimeout: 10000,
+  });
+
+  if (!canvas || canvas.width === 0 || canvas.height === 0) {
+    throw new Error('Canvas render produced empty dimensions');
+  }
+
+  const imgData = canvas.toDataURL('image/jpeg', 0.98);
+
+  // 4. Generate A5 PDF document
+  const pdf = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a5',
+  });
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const margin = 6; // 6mm margin
+  const printWidth = pageWidth - (margin * 2);
+  const printHeight = (canvas.height * printWidth) / canvas.width;
+
+  // Center vertically if it fits nicely on a single A5 sheet
+  const yPos = printHeight < (pageHeight - margin * 2)
+    ? margin + ((pageHeight - margin * 2 - printHeight) / 4)
+    : margin;
+
+  pdf.addImage(imgData, 'JPEG', margin, yPos, printWidth, Math.min(printHeight, pageHeight - margin));
 
   const safeId = String(memberId || 'member').replace(/[^a-zA-Z0-9_-]/g, '_');
-
-  const opt = {
-    margin: [6, 6, 6, 6],
-    filename: `MTVS_Pass_${safeId}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: {
-      scale: 2,
-      useCORS: true,
-      allowTaint: false,
-      backgroundColor: '#ffffff',
-      logging: false,
-      imageTimeout: 15000,
-      scrollX: 0,
-      scrollY: 0,
-      x: 0,
-      y: 0,
-      windowWidth: 700,
-    },
-    jsPDF: { unit: 'mm', format: 'a5', orientation: 'portrait' },
-  };
-
-  const h2p = (typeof html2pdf === 'function' ? html2pdf : html2pdf?.default) || window.html2pdf;
-  if (!h2p) throw new Error('html2pdf library could not be loaded');
-
-  await h2p().set(opt).from(element).save();
+  pdf.save(`MTVS_Pass_${safeId}.pdf`);
+  return true;
 }
